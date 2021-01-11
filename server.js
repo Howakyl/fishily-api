@@ -9,7 +9,7 @@ const app = express();
 
 let origin;
 if (process.env.NODE_ENV === 'production') {
-    origin = 'https://fishily-frontend.herokuapp.com';
+    origin = 'https://angry-meitner-d1e97c.netlify.app';
 } else {
     origin = 'http://localhost:3000';
 }
