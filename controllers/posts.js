@@ -94,7 +94,7 @@ const destroy = (req,res) => {
         });
 };
 
-// POST COMMENTS
+// ALL POST COMMENTS
 const comments = (req, res) => {
     db.Post.findById(req.params.id)
     .populate("comments")

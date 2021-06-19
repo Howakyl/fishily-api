@@ -15,8 +15,6 @@ const index = (req,res) => {
 
 // CREATE COMMENT
 const create = (req, res) => {
-  console.log(req)
-  console.log(res)
   const postId = req.params.id;
   db.Post.findById(postId)
     .then((foundPost) => {
