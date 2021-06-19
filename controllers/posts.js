@@ -94,10 +94,26 @@ const destroy = (req,res) => {
         });
 };
 
+// POST COMMENTS
+const comments = (req, res) => {
+    db.Post.findById(req.params.id)
+    .populate("comments")
+    .then((foundPost) => {
+        res.json({ comments: foundPost.comments })
+    })
+    .catch((err) => {
+        if (err) console.log(err);
+        res.json({ Error: 'Unable to fetch comments'})
+    })
+
+
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
-    destroy
+    destroy,
+    comments
 }
