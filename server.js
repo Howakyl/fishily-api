@@ -33,6 +33,7 @@ app.use(session({
 //API ROUTES
 app.use("/api/fishily/users", routes.users);
 app.use("/api/fishily/posts", routes.posts);
+app.use("/api/fishily/comments", routes.comments);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('fishily-client/build'));
