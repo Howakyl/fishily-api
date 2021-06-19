@@ -13,6 +13,17 @@ const index = (req,res) => {
     })
 };
 
+// CREATE COMMENT
+const create = (req, res) => {
+  const postId = req.params.id;
+  db.Post.findById(postId)
+    .then((foundPost) => {
+      console.log(foundPost)
+      res.json({ post: foundPost})
+    })
+}
+
 module.exports = {
   index,
+  create
 }
