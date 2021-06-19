@@ -18,8 +18,18 @@ const create = (req, res) => {
   const postId = req.params.id;
   db.Post.findById(postId)
     .then((foundPost) => {
-      console.log(foundPost)
-      res.json({ post: foundPost})
+      db.Comment.create(req.body)
+        .then((createdComment) => {
+          foundPost.comments.push(createdComment._id);
+          foundPost.save((err, savedPost) => {
+            if (err) return console.log(err);
+          });
+          res.json({ comment: createdComment});
+        })
+        .catch((err) => {
+          console.log('error creating comment', err);
+          res.json({ Error: 'Unable to create comment.'})
+        })
     })
 }
 
