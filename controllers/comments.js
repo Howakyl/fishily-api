@@ -25,6 +25,13 @@ const create = (req, res) => {
             if (err) return console.log(err);
           });
           res.json({ comment: createdComment});
+          db.User.findById(createdComment.user)
+            .then((foundUser) => {
+              foundUser.comments.push(createdComment._id)
+              foundUser.save((err, savedUser) => {
+                if (err) return console.log(err);
+              })
+            })
         })
         .catch((err) => {
           console.log('error creating comment', err);
@@ -32,6 +39,15 @@ const create = (req, res) => {
         })
     })
 }
+
+// DELETE COMMENT
+// const destroy = (req, res) => {
+//   const commentId = req.params.id;
+//   db.Comment.findByIdAndDelete(commentId)
+//     .then((deletedComment) => {
+//       db.User.findOne({'c'})
+//     })
+// }
 
 module.exports = {
   index,
