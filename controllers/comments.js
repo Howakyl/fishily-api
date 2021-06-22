@@ -48,12 +48,21 @@ const destroy = (req, res) => {
       db.User.findOne({'comments': commentId}, (err, foundUser) => {
         if (err) return console.log(err);
 
-        foundUser.comments.remove(commentId);
-        foundUser.save((err, savedUser) => {
-          if (err) return console.log(err);
-        });
+        if (foundUser) {
+          foundUser.comments.remove(commentId);
+          foundUser.save((err, savedUser) => {
+            if (err) return console.log(err);
+          });
+        }
       });
-      res.json({comment: deletedComment})
+      db.Post.findOne({'comments': commentId}, (err, foundPost) => {
+        if (err) return console.log(err);
+        foundPost.comments.remove(commentId);
+        foundPost.save((err, savedPost) => {
+          if (err) return console.log(err);
+        })
+      })
+      res.json({deletedComment: deletedComment})
     })
     .catch(err => {
       console.log('error deleting comment: ', err);
