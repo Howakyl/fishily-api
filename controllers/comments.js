@@ -13,6 +13,19 @@ const index = (req, res) => {
     });
 };
 
+// SHOW ONE COMMENT
+const show = (req, res) => {
+  db.Comment.findById(req.params.id)
+    .populate("user")
+    .then((foundComment) => {
+      res.json({ comment: foundComment });
+    })
+    .catch(err => {
+      console.log('error fetching comment.', err);
+      res.json({error: 'Unable to fetch comment data.'})
+    })
+}
+
 // CREATE COMMENT
 const create = (req, res) => {
   const postId = req.params.id;
@@ -72,4 +85,5 @@ module.exports = {
   index,
   create,
   destroy,
+  show
 };
