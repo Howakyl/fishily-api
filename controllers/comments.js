@@ -13,18 +13,18 @@ const index = (req, res) => {
     });
 };
 
-// SHOW ONE COMMENT
-const show = (req, res) => {
-  db.Comment.findById(req.params.id)
-    .populate("user")
-    .then((foundComment) => {
-      res.json({ comment: foundComment });
-    })
-    .catch((err) => {
-      console.log("error fetching comment.", err);
-      res.json({ error: "Unable to fetch comment data." });
-    });
-};
+const show = async (req,res) => {
+
+  try {
+    const data = await db.Comment.findById(req.params.id)
+    .populate('user')
+    res.json({comment: data});
+  } catch (error) {
+    if (error) console.log(error)
+    res.json({ error: 'unable to fetch comment'})
+  }
+
+}
 
 // CREATE COMMENT
 const create = (req, res) => {
