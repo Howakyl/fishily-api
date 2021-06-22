@@ -21,28 +21,25 @@ const show = async (req, res) => {
 };
 
 // CREATE COMMENT
-const create = (req, res) => {
+const create = async (req, res) => {
   const postId = req.params.id;
-  db.Post.findById(postId).then((foundPost) => {
-    db.Comment.create(req.body)
-      .then((createdComment) => {
-        foundPost.comments.push(createdComment._id);
-        foundPost.save((err, savedPost) => {
-          if (err) return console.log(err);
-        });
-        res.json({ comment: createdComment });
-        db.User.findById(createdComment.user).then((foundUser) => {
-          foundUser.comments.push(createdComment._id);
-          foundUser.save((err, savedUser) => {
-            if (err) return console.log(err);
-          });
-        });
-      })
-      .catch((err) => {
-        console.log("error creating comment", err);
-        res.json({ Error: "Unable to create comment." });
-      });
-  });
+  try {
+    const foundPost = await db.Post.findById(postId);
+    const createdComment = await db.Comment.create(req.body);
+    foundPost.comments.push(createdComment._id);
+    foundPost.save((err, savedPost) => {
+      if (err) return console.log(err);
+    });
+    const foundUser = await db.User.findById(createdComment.user);
+    foundUser.comments.push(createdComment._id);
+    foundUser.save((err, savedUser) => {
+      if (err) return console.log(err);
+    });
+    res.json({ comment: createdComment });
+  } catch (error) {
+    console.log("error creating comment: ", error);
+    res.json({ Error: "Unable to create comment." });
+  }
 };
 
 // DELETE COMMENT
