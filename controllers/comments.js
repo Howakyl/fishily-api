@@ -46,19 +46,21 @@ const create = async (req, res) => {
 
 // EDIT COMMENT
 const update = async (req, res) => {
+  console.log('updating...')
   const commentId = req.params.id;
   try {
-    const updatedComment = db.Comment.findByIdAndUpdate(
+    const updatedComment = await db.Comment.findByIdAndUpdate(
       commentId,
       req.body,
-      {new: true}
-    )
-    res.json({ comment: updatedComment})
+      { new: true }
+    );
+    res.json({ comment: updatedComment });
+    console.log('finished updating')
   } catch (error) {
-    console.log('error updating comment: ', error);
-    res.json({ Error: 'Unable to update comment.'});
-  };
-}
+    console.log("error updating comment: ", error);
+    res.json({ Error: "Unable to update comment." });
+  }
+};
 
 // DELETE COMMENT, REMOVE FROM POST AND USER
 const destroy = async (req, res) => {
