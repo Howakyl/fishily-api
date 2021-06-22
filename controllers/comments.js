@@ -42,34 +42,31 @@ const create = async (req, res) => {
   }
 };
 
-// DELETE COMMENT
-const destroy = (req, res) => {
+const destroy = async (req, res) => {
   const commentId = req.params.id;
-  db.Comment.findByIdAndDelete(commentId)
-    .then((deletedComment) => {
-      db.User.findOne({ comments: commentId }, (err, foundUser) => {
-        if (err) return console.log(err);
-
-        if (foundUser) {
-          foundUser.comments.remove(commentId);
-          foundUser.save((err, savedUser) => {
-            if (err) return console.log(err);
-          });
-        }
-      });
-      db.Post.findOne({ comments: commentId }, (err, foundPost) => {
-        if (err) return console.log(err);
-        foundPost.comments.remove(commentId);
-        foundPost.save((err, savedPost) => {
+  try {
+    const deletedComment = await db.Comment.findByIdAndDelete(commentId);
+    await db.User.findOne({ comments: commentId }, (err, foundUser) => {
+      if (err) return console.log(err);
+      if (foundUser) {
+        foundUser.comments.remove(commentId);
+        foundUser.save((err, savedUser) => {
           if (err) return console.log(err);
         });
-      });
-      res.json({ deletedComment: deletedComment });
-    })
-    .catch((err) => {
-      console.log("error deleting comment: ", err);
-      res.json({ Error: "unable to delete comment." });
+      }
     });
+    await db.Post.findOne({ comments: commentId }, (err, foundPost) => {
+      if (err) return console.log(err);
+      foundPost.comments.remove(commentId);
+      foundPost.save((err, savedPost) => {
+        if (err) return console.log(err);
+      });
+    });
+    res.json({ deletedComment: deletedComment });
+  } catch (error) {
+    console.log("error deleting comment: ", error);
+    res.json({ Error: "unable to delete comment." });
+  }
 };
 
 module.exports = {
