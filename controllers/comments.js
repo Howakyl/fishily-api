@@ -41,15 +41,28 @@ const create = (req, res) => {
 }
 
 // DELETE COMMENT
-// const destroy = (req, res) => {
-//   const commentId = req.params.id;
-//   db.Comment.findByIdAndDelete(commentId)
-//     .then((deletedComment) => {
-//       db.User.findOne({'c'})
-//     })
-// }
+const destroy = (req, res) => {
+  const commentId = req.params.id;
+  db.Comment.findByIdAndDelete(commentId)
+    .then((deletedComment) => {
+      db.User.findOne({'comments': commentId}, (err, foundUser) => {
+        if (err) return console.log(err);
+
+        foundUser.comments.remove(commentId);
+        foundUser.save((err, savedUser) => {
+          if (err) return console.log(err);
+        });
+      });
+      res.json({comment: deletedComment})
+    })
+    .catch(err => {
+      console.log('error deleting comment: ', err);
+      res.json({ Error: 'unable to delete comment.'})
+    });
+};
 
 module.exports = {
   index,
-  create
+  create,
+  destroy
 }
