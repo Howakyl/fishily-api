@@ -20,11 +20,11 @@ const show = (req, res) => {
     .then((foundComment) => {
       res.json({ comment: foundComment });
     })
-    .catch(err => {
-      console.log('error fetching comment.', err);
-      res.json({error: 'Unable to fetch comment data.'})
-    })
-}
+    .catch((err) => {
+      console.log("error fetching comment.", err);
+      res.json({ error: "Unable to fetch comment data." });
+    });
+};
 
 // CREATE COMMENT
 const create = (req, res) => {
@@ -85,5 +85,5 @@ module.exports = {
   index,
   create,
   destroy,
-  show
+  show,
 };
