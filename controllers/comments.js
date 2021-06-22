@@ -1,5 +1,6 @@
 const db = require("../models");
 
+// ALL COMMENTS
 const index = async (req, res) => {
   try {
     const data = await db.Comment.find({}).populate("post");
@@ -10,6 +11,7 @@ const index = async (req, res) => {
   }
 };
 
+// SHOW ONE COMMENT
 const show = async (req, res) => {
   try {
     const data = await db.Comment.findById(req.params.id).populate("user");
@@ -42,6 +44,23 @@ const create = async (req, res) => {
   }
 };
 
+// EDIT COMMENT
+const update = async (req, res) => {
+  const commentId = req.params.id;
+  try {
+    const updatedComment = db.Comment.findByIdAndUpdate(
+      commentId,
+      req.body,
+      {new: true}
+    )
+    res.json({ comment: updatedComment})
+  } catch (error) {
+    console.log('error updating comment: ', error);
+    res.json({ Error: 'Unable to update comment.'});
+  };
+}
+
+// DELETE COMMENT, REMOVE FROM POST AND USER
 const destroy = async (req, res) => {
   const commentId = req.params.id;
   try {
@@ -71,7 +90,8 @@ const destroy = async (req, res) => {
 
 module.exports = {
   index,
-  create,
-  destroy,
   show,
+  create,
+  update,
+  destroy,
 };
