@@ -46,7 +46,6 @@ const create = async (req, res) => {
 
 // EDIT COMMENT
 const update = async (req, res) => {
-  console.log('updating...')
   const commentId = req.params.id;
   try {
     const updatedComment = await db.Comment.findByIdAndUpdate(
@@ -55,7 +54,6 @@ const update = async (req, res) => {
       { new: true }
     );
     res.json({ comment: updatedComment });
-    console.log('finished updating')
   } catch (error) {
     console.log("error updating comment: ", error);
     res.json({ Error: "Unable to update comment." });

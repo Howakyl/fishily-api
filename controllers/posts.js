@@ -18,6 +18,7 @@ const show = (req,res) => {
 
     db.Post.findById(req.params.id)
         .populate("user")
+        .populate("comments")
         .then((foundPost) => {
             res.json({ post: foundPost });
         })
