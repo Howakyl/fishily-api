@@ -18,6 +18,7 @@ const show = (req,res) => {
 
     db.Post.findById(req.params.id)
         .populate("user")
+        .populate("comments")
         .then((foundPost) => {
             res.json({ post: foundPost });
         })
@@ -94,10 +95,26 @@ const destroy = (req,res) => {
         });
 };
 
+// ALL POST COMMENTS
+const comments = (req, res) => {
+    db.Post.findById(req.params.id)
+    .populate("comments")
+    .then((foundPost) => {
+        res.json({ comments: foundPost.comments })
+    })
+    .catch((err) => {
+        if (err) console.log(err);
+        res.json({ Error: 'Unable to fetch comments'})
+    })
+
+
+}
+
 module.exports = {
     index,
     create,
     show,
     update,
-    destroy
+    destroy,
+    comments
 }
