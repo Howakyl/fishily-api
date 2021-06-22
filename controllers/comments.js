@@ -1,30 +1,24 @@
 const db = require("../models");
 
-// ALL COMMENTS
-const index = (req, res) => {
-  db.Comment.find({})
-    .populate("post")
-    .then((foundComments) => {
-      res.json({ comments: foundComments });
-    })
-    .catch((err) => {
-      console.log("error: ", err);
-      res.json({ Error: "Unable to retrieve comments data." });
-    });
+const index = async (req, res) => {
+  try {
+    const data = await db.Comment.find({}).populate("post");
+    res.json({ comments: data });
+  } catch (error) {
+    if (error) console.log("error: ", error);
+    res.json({ Error: "Unable to retrieve comments data." });
+  }
 };
 
-const show = async (req,res) => {
-
+const show = async (req, res) => {
   try {
-    const data = await db.Comment.findById(req.params.id)
-    .populate('user')
-    res.json({comment: data});
+    const data = await db.Comment.findById(req.params.id).populate("user");
+    res.json({ comment: data });
   } catch (error) {
-    if (error) console.log(error)
-    res.json({ error: 'unable to fetch comment'})
+    if (error) console.log(error);
+    res.json({ error: "unable to fetch comment" });
   }
-
-}
+};
 
 // CREATE COMMENT
 const create = (req, res) => {
