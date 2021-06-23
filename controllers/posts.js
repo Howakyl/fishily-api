@@ -1,16 +1,14 @@
 const db = require("../models/");
 
 // ALL POSTS
-const index = (req, res) => {
-  db.Post.find({})
-    .populate("user")
-    .then((foundPosts) => {
-      res.json({ posts: foundPosts });
-    })
-    .catch((err) => {
-      console.log("error: ", err);
-      res.json({ Error: "Unable to retrieve post data." });
-    });
+const index = async (req, res) => {
+  try {
+    const foundPosts = await db.Post.find({}).populate("user");
+    res.json({ posts: foundPosts });
+  } catch (error) {
+    if (error) console.log(error);
+    res.json({ error: "Unable to retrieve posts."})
+  }
 };
 
 // SHOW POST
