@@ -27,7 +27,6 @@ const create = (req, res) => {
   const userId = req.params.id;
   db.User.findById(userId)
     .then((foundUser) => {
-      req.body.user = userId;
       db.Post.create(req.body)
         .then((createdPost) => {
           foundUser.posts.push(createdPost._id);
@@ -46,6 +45,22 @@ const create = (req, res) => {
       res.json({ Error: "Unable to find user." });
     });
 };
+
+// const create = async (req, res) => {
+//   const userId = req.params.id;
+//   try {
+//     const foundUser = await db.User.findById(userId);
+//     const createdPost = await db.Post.create(req.body);
+//     foundUser.posts.push(createdPost._id);
+//     await foundUser.save((err) => {
+//       if (err) return console.log(err);
+//     });
+//     res.json({ post: createdPost });
+//   } catch (error) {
+//     if (error) console.log(error);
+//     res.json({ Error: "No user found."})
+//   }
+// }
 
 //UPDATE POST
 const update = (req, res) => {
