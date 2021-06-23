@@ -12,18 +12,15 @@ const index = async (req, res) => {
 };
 
 // SHOW POST
-const show = (req, res) => {
-  db.Post.findById(req.params.id)
-    .populate("user")
-    .populate("comments")
-    .then((foundPost) => {
-      res.json({ post: foundPost });
-    })
-    .catch((err) => {
-      console.log("error fetching post data", err);
-      res.json({ Error: "Unable to fetch post data" });
-    });
-};
+const show = async (req, res) => {
+  try {
+    const foundPost = await db.Post.findById(req.params.id).populate("user").populate("comments")
+    res.json({ post: foundPost });
+  } catch (error) {
+    if (error) console.log(error);
+    res.json({ error: "unable to retrieve post data."})
+  }
+}
 
 // ADD POSTS
 const create = (req, res) => {
