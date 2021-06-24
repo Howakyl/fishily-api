@@ -16,7 +16,12 @@ const show = async (req, res) => {
   try {
     const foundPost = await db.Post.findById(req.params.id)
       .populate("user")
-      .populate("comments");
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user"
+        }
+      });
     res.json({ post: foundPost });
   } catch (error) {
     if (error) console.log(error);
@@ -25,37 +30,12 @@ const show = async (req, res) => {
 };
 
 // ADD POSTS
-// const create = (req, res) => {
-//   const userId = req.params.id;
-//   db.User.findById(userId)
-//     .then((foundUser) => {
-//       req.body.user = userId;
-//       db.Post.create(req.body)
-//         .then((createdPost) => {
-//           foundUser.posts.push(createdPost._id);
-//           foundUser.save((err, savedUser) => {
-//             if (err) return console.log(err);
-//           });
-//           res.json({ post: createdPost });
-//         })
-//         .catch((err) => {
-//           console.log("error creating post: ", err);
-//           res.json({ Error: "Unable to create post." });
-//         });
-//     })
-//     .catch((err) => {
-//       console.log("error finding user: ", err);
-//       res.json({ Error: "Unable to find user." });
-//     });
-// };
-
 const create = async (req, res) => {
   const userId = req.params.id;
   try {
     const foundUser = await db.User.findById(userId);
     req.body.user = userId;
     const createdPost = await db.Post.create(req.body);
-    
     foundUser.posts.push(createdPost._id);
     await foundUser.save();
     res.json({ post: createdPost });
