@@ -15,11 +15,11 @@ const index = async (req, res) => {
 const show = async (req, res) => {
   try {
     const foundPost = await db.Post.findById(req.params.id)
-      .populate("user")
+      .populate("user", {password: 0, bio: 0})
       .populate({
         path: "comments",
         populate: {
-          path: "user"
+          path: "user",
         }
       });
     res.json({ post: foundPost });
