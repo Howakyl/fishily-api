@@ -53,39 +53,33 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const postId = req.params.id;
   try {
-    const updatedPost = await db.Post.findByIdAndUpdate(
-      postId, 
-      req.body, 
-      { new: true }
-    );
+    const updatedPost = await db.Post.findByIdAndUpdate(postId, req.body, {
+      new: true,
+    });
     res.json({ post: updatedPost });
-  } catch (error){
-    console.log('error updating post', error);
-    res.json({ Error: "unable to update post."});
+  } catch (error) {
+    console.log("error updating post", error);
+    res.json({ Error: "unable to update post." });
   }
 };
 
-//DELETE POST, DELETES POST ON USER
-const destroy = (req, res) => {
+//DELETE POST, DELETES POST ON USER, COMMENTS FROM USER
+const destroy = async (req, res) => {
   const postId = req.params.id;
-
-  db.Post.findByIdAndDelete(postId)
-    .then((deletedPost) => {
-      db.User.findOne({ posts: postId }, (err, foundUser) => {
-        if (err) return console.log(err);
-
-        foundUser.posts.remove(postId);
-        foundUser.save((err, savedUser) => {
-          if (err) return console.log(err);
-        });
-      });
-
-      res.json({ post: deletedPost });
-    })
-    .catch((err) => {
-      console.log("error deleting post: ", err);
-      res.json({ Error: "unable to delete post." });
+  try {
+    const deletedPost = await db.Post.findByIdAndDelete(postId);
+    await db.Comment.deleteMany({ _id: { $in: deletedPost.comments } });
+    await db.User.findOne({ posts: postId }, (error, foundUser) => {
+      if (error) return console.log(error);
+      foundUser.posts.remove(postId);
+      foundUser.comments.remove(deletedPost.comments);
+      foundUser.save();
     });
+    res.json({ post: deletedPost });
+  } catch (error) {
+    console.log("error deleting post: ", error);
+    res.json({ Error: "unable to delete post." });
+  }
 };
 
 // ALL POST COMMENTS

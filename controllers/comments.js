@@ -91,10 +91,21 @@ const destroy = async (req, res) => {
   }
 };
 
+// REMOVE THIS AFTER TESTING
+const dropAll = async (req, res) => {
+  const foundUser = await db.User.findById(req.params.id);
+  console.log(foundUser)
+  foundUser.comments = []
+  await foundUser.save()
+  res.json({ deletedComments: foundUser.comments })
+  // res.json({founduser: foundUser})
+}
+
 module.exports = {
   index,
   show,
   create,
   update,
   destroy,
+  dropAll
 };
