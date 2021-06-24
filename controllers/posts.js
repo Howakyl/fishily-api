@@ -3,7 +3,7 @@ const db = require("../models/");
 // ALL POSTS
 const index = async (req, res) => {
   try {
-    const foundPosts = await db.Post.find({}).populate("user");
+    const foundPosts = await db.Post.find({}).populate("user", {password: 0, bio: 0});
     res.json({ posts: foundPosts });
   } catch (error) {
     if (error) console.log(error);
