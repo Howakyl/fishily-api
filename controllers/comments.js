@@ -3,7 +3,7 @@ const db = require("../models");
 // ALL COMMENTS
 const index = async (req, res) => {
   try {
-    const data = await db.Comment.find({}).populate("post");
+    const data = await db.Comment.find({});
     res.json({ comments: data });
   } catch (error) {
     if (error) console.log("error: ", error);
@@ -27,17 +27,17 @@ const create = async (req, res) => {
   const postId = req.params.id;
   try {
     const foundPost = await db.Post.findById(postId);
+    req.body.post = postId;
     const createdComment = await db.Comment.create(req.body);
     foundPost.comments.push(createdComment._id);
-    foundPost.save((err, savedPost) => {
-      if (err) return console.log(err);
-    });
-    const foundUser = await db.User.findById(createdComment.user);
-    foundUser.comments.push(createdComment._id);
-    foundUser.save((err, savedUser) => {
-      if (err) return console.log(err);
-    });
-    res.json({ comment: createdComment });
+    foundPost.save();
+    try {
+      const foundUser = await db.User.findById(createdComment.user);
+      foundUser.comments.push(createdComment._id);
+      foundUser.save();
+    } finally {
+      res.json({ comment: createdComment });
+    }
   } catch (error) {
     console.log("error creating comment: ", error);
     res.json({ Error: "Unable to create comment." });
