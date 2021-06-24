@@ -14,7 +14,10 @@ const index = async (req, res) => {
 // SHOW ONE COMMENT
 const show = async (req, res) => {
   try {
-    const data = await db.Comment.findById(req.params.id).populate("user");
+    const data = await db.Comment.findById(req.params.id).populate("user", {
+      password: 0,
+      bio: 0,
+    });
     res.json({ comment: data });
   } catch (error) {
     if (error) console.log(error);

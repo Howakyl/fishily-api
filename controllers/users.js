@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const db = require("../models");
 
 const index = (req, res) => {
-  db.User.find({})
+  db.User.find({}, {password: 0})
     .then((foundUsers) => {
       res.json({ users: foundUsers });
     })
