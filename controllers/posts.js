@@ -3,7 +3,10 @@ const db = require("../models/");
 // ALL POSTS
 const index = async (req, res) => {
   try {
-    const foundPosts = await db.Post.find({}).populate("user", {password: 0, bio: 0});
+    const foundPosts = await db.Post.find({}).populate("user", {
+      password: 0,
+      bio: 0,
+    });
     res.json({ posts: foundPosts });
   } catch (error) {
     if (error) console.log(error);
@@ -15,13 +18,13 @@ const index = async (req, res) => {
 const show = async (req, res) => {
   try {
     const foundPost = await db.Post.findById(req.params.id)
-      .populate("user", {password: 0, bio: 0})
+      .populate("user", { password: 0, bio: 0 })
       .populate({
         path: "comments",
         populate: {
           path: "user",
-          select: "username picture"
-        }
+          select: "username picture",
+        },
       });
     res.json({ post: foundPost });
   } catch (error) {
@@ -42,9 +45,9 @@ const create = async (req, res) => {
     res.json({ post: createdPost });
   } catch (error) {
     if (error) console.log(error);
-    res.json({ Error: "No user found."})
+    res.json({ Error: "No user found." });
   }
-}
+};
 
 //UPDATE POST
 const update = (req, res) => {
