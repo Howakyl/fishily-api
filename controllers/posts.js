@@ -50,15 +50,19 @@ const create = async (req, res) => {
 };
 
 //UPDATE POST
-const update = (req, res) => {
-  db.Post.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then((updatedPost) => {
-      res.json({ post: updatedPost });
-    })
-    .catch((err) => {
-      console.log("error updating post: ", err);
-      res.json({ Error: "Unable to update post. " });
-    });
+const update = async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const updatedPost = await db.Post.findByIdAndUpdate(
+      postId, 
+      req.body, 
+      { new: true }
+    );
+    res.json({ post: updatedPost });
+  } catch (error){
+    console.log('error updating post', error);
+    res.json({ Error: "unable to update post."});
+  }
 };
 
 //DELETE POST, DELETES POST ON USER
