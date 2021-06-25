@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const db = require("../models");
 
 const index = (req, res) => {
-  db.User.find({}, {password: 0})
+  db.User.find({}, { password: 0 })
     .then((foundUsers) => {
       res.json({ users: foundUsers });
     })
@@ -71,19 +71,17 @@ const update = (req, res) => {
     });
 };
 
-const destroy = (req, res) => {
-  db.User.findByIdAndDelete(req.params.id)
-    .then((deletedUser) => {
-      db.Post.deleteMany({ _id: { $in: deletedUser.posts } }, (err, result) => {
-        if (err) return console.log(err);
-      });
-
-      res.json({ user: deletedUser });
-    })
-    .catch((err) => {
-      console.log("error deleting user : ", err);
-      res.json({ Error: "unable to delete user." });
-    });
+const destroy = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const deletedUser = await db.User.findByIdAndDelete(userId);
+    await db.Post.deleteMany({ _id: { $in: deletedUser.posts } });
+    await db.Comment.deleteMany({ _id: { $in: deletedUser.comments } });
+    res.json({ user: deletedUser });
+  } catch (error) {
+    console.log("error deleting user: ", err);
+    res.json({ Error: "unable to delete user" });
+  }
 };
 
 const logIn = (req, res) => {
