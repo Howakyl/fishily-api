@@ -71,7 +71,20 @@ const update = (req, res) => {
     });
 };
 
-const destroy = async (req, res) => {
+const logOut = (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        return console.log('error logging out: ',err)
+      } else {
+        req.session = null;
+
+      }
+    })
+  }
+};
+
+const deleteUser = async (req, res) => {
   const userId = req.params.id;
   try {
     const deletedUser = await db.User.findByIdAndDelete(userId);
@@ -79,7 +92,7 @@ const destroy = async (req, res) => {
     await db.Comment.deleteMany({ _id: { $in: deletedUser.comments } });
     res.json({ user: deletedUser });
   } catch (error) {
-    console.log("error deleting user: ", err);
+    console.log("error deleting user: ", error);
     res.json({ Error: "unable to delete user" });
   }
 };
@@ -106,21 +119,12 @@ const logIn = (req, res) => {
   });
 };
 
-const logOut = (req, res) => {
-  if (req.session.currentUser) {
-    req.session.destroy((err) => {
-      if (err) return console.log("error destroying session");
-      console.log("successfully logged out!");
-    });
-  }
-};
-
 module.exports = {
   index,
   show,
   create,
   update,
-  destroy,
+  deleteUser,
   logIn,
   logOut,
 };
