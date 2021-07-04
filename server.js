@@ -8,11 +8,11 @@ const port = process.env.PORT || 4000;
 const app = express();
 
 let origin;
-if (process.env.NODE_ENV === "production") {
+// if (process.env.NODE_ENV === "production") {
   origin = "https://fishily.netlify.app";
-} else {
-  origin = "http://localhost:3000";
-}
+// } else {
+//   origin = "http://localhost:3000";
+// }
 const corsOptions = {
   origin: origin,
 };
