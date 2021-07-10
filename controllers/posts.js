@@ -72,7 +72,9 @@ const destroy = async (req, res) => {
     await db.User.findOne({ posts: postId }, (error, foundUser) => {
       if (error) return console.log(error);
       foundUser.posts.remove(postId);
-      foundUser.comments.remove(deletedPost.comments);
+      if (deletedPost.comments.length > 0) {
+        foundUser.comments.remove(deletedPost.comments);
+      } 
       foundUser.save();
     });
     res.json({ post: deletedPost });
