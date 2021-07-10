@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const db = require("../models");
 
+// ALL USERS
 const index = (req, res) => {
   db.User.find({}, { password: 0 })
     .then((foundUsers) => {
@@ -12,6 +13,7 @@ const index = (req, res) => {
     });
 };
 
+// SHOW ONE USEr
 const show = (req, res) => {
   db.User.findById(req.params.id)
     .populate("posts")
@@ -24,6 +26,7 @@ const show = (req, res) => {
     });
 };
 
+// CREATE USER
 const create = (req, res) => {
   db.User.findOne({ username: req.body.username }, (err, user) => {
     if (err) return console.log(err);
@@ -60,6 +63,7 @@ const create = (req, res) => {
   });
 };
 
+// UPDATE USER
 const update = (req, res) => {
   db.User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((updatedUser) => {
@@ -71,6 +75,7 @@ const update = (req, res) => {
     });
 };
 
+// LOG OUT USER
 const logOut = (req, res) => {
   if (req.session) {
     req.session.destroy((err) => {
@@ -84,6 +89,7 @@ const logOut = (req, res) => {
   }
 };
 
+// DELETE USER
 const deleteUser = async (req, res) => {
   const userId = req.params.id;
   try {
@@ -97,6 +103,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// LOG IN USER
 const logIn = (req, res) => {
   db.User.findOne({ username: req.body.username }, (err, user) => {
     if (err) return console.log(err);
