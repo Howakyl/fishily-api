@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const ctrl = require("../controllers");
+import * as ctrl from "../controllers";
 
 // /api/fishily/users
 router.get("/", ctrl.users.index);

@@ -1,4 +1,4 @@
-export const router = require('express').Router();
+const router = require('express').Router();
 import * as ctrl from '../controllers';
 
 // /api/fishily/comments

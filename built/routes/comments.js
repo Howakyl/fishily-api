@@ -19,13 +19,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.router = void 0;
-exports.router = require('express').Router();
+const router = require('express').Router();
 const ctrl = __importStar(require("../controllers"));
-exports.router.get("/", ctrl.comments.index);
-exports.router.get("/:id", ctrl.comments.show);
-exports.router.post("/:id", ctrl.comments.create);
-exports.router.put("/:id", ctrl.comments.update);
-exports.router.delete('/:id', ctrl.comments.destroy);
-module.exports = exports.router;
+router.get("/", ctrl.comments.index);
+router.get("/:id", ctrl.comments.show);
+router.post("/:id", ctrl.comments.create);
+router.put("/:id", ctrl.comments.update);
+router.delete('/:id', ctrl.comments.destroy);
+module.exports = router;
 //# sourceMappingURL=comments.js.map
