@@ -14,10 +14,8 @@ const configOptions = {
 mongoose
   .connect(connectionString, configOptions)
   .then(() => console.log("MongoDB successfully connected..."))
-  .catch((err) => console.log(`MongoDB connection error: ${err}`));
+  .catch((err: Error) => console.log(`MongoDB connection error: ${err}`));
 
-module.exports = {
-  User: require("./User"),
-  Post: require("./Post"),
-  Comment: require("./Comment"),
-};
+export const User = require('./User')
+export const Post = require('./Post')
+export const Comment = require('./Comment')
