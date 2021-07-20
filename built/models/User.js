@@ -1,5 +1,10 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const Schema = mongoose_1.default.Schema;
 const UserSchema = new Schema({
     username: {
         type: String,
@@ -27,17 +32,17 @@ const UserSchema = new Schema({
     },
     posts: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose_1.default.Schema.Types.ObjectId,
             ref: "Post",
         },
     ],
     comments: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose_1.default.Schema.Types.ObjectId,
             ref: "Comment",
         },
     ],
 }, { timestamps: true });
-const User = mongoose.model("User", UserSchema);
-module.exports = User;
+const User = mongoose_1.default.model("User", UserSchema);
+exports.default = User;
 //# sourceMappingURL=User.js.map
