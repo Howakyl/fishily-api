@@ -1,5 +1,3 @@
-module.exports = {
-  users: require("./users"),
-  posts: require("./posts"),
-  comments: require("./comments"),
-};
+export const users = require("./users")
+export const posts = require("./posts")
+export const comments = require("./comments")
