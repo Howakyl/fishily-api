@@ -2,12 +2,12 @@
   "name": "fishily-api",
   "version": "1.0.0",
   "description": "Find your new favorite fishing spot!",
-  "main": "src/server.ts",
+  "main": "server.ts",
   "scripts": {
     "watch" : "tsc -w",
     "devStart": "nodemon built/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "node built/server.js",
     "publishToHeroku": "cd ../ && git subtree push --prefix fishily-api heroku-fishily-backend main || true"
   },
   "author": "Kyle Howard",
