@@ -18,7 +18,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 const router = require("express").Router();
 const ctrl = __importStar(require("../controllers"));
 router.get("/", ctrl.posts.index);

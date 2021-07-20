@@ -8,4 +8,4 @@ router.post("/:id", ctrl.comments.create);
 router.put("/:id", ctrl.comments.update);
 router.delete('/:id', ctrl.comments.destroy);
 
-module.exports = router;
+export = router;

@@ -9,4 +9,4 @@ router.put("/:id", ctrl.posts.update);
 router.delete("/:id", ctrl.posts.destroy);
 router.get("/:id/comments", ctrl.posts.comments);
 
-module.exports = router;
+export = router;
