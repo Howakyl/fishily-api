@@ -1,5 +1,10 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const Schema = mongoose_1.default.Schema;
 const postSchema = new Schema({
     title: {
         type: String,
@@ -34,16 +39,16 @@ const postSchema = new Schema({
         default: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Fish_icon.svg/1200px-Fish_icon.svg.png",
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "User",
     },
     comments: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose_1.default.Schema.Types.ObjectId,
             ref: "Comment",
         },
     ],
 }, { timestamps: true });
-const Post = mongoose.model("Post", postSchema);
-module.exports = Post;
+const Post = mongoose_1.default.model("Post", postSchema);
+exports.default = Post;
 //# sourceMappingURL=Post.js.map

@@ -1,3 +1,23 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,8 +27,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const db = require("../models");
-const index = (req, res) => __awaiter(this, void 0, void 0, function* () {
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.index = void 0;
+const db = __importStar(require("../models"));
+const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const foundPosts = yield db.Post.find({}).populate("user", {
             password: 0,
@@ -22,7 +44,8 @@ const index = (req, res) => __awaiter(this, void 0, void 0, function* () {
         res.json({ error: "Unable to retrieve posts." });
     }
 });
-const show = (req, res) => __awaiter(this, void 0, void 0, function* () {
+exports.index = index;
+const show = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const foundPost = yield db.Post.findById(req.params.id)
             .populate("user", { password: 0, bio: 0 })
@@ -41,7 +64,7 @@ const show = (req, res) => __awaiter(this, void 0, void 0, function* () {
         res.json({ error: "unable to retrieve post data." });
     }
 });
-const create = (req, res) => __awaiter(this, void 0, void 0, function* () {
+const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.id;
     try {
         const foundUser = yield db.User.findById(userId);
@@ -57,7 +80,7 @@ const create = (req, res) => __awaiter(this, void 0, void 0, function* () {
         res.json({ Error: "No user found." });
     }
 });
-const update = (req, res) => __awaiter(this, void 0, void 0, function* () {
+const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.id;
     try {
         const updatedPost = yield db.Post.findByIdAndUpdate(postId, req.body, {
@@ -70,7 +93,7 @@ const update = (req, res) => __awaiter(this, void 0, void 0, function* () {
         res.json({ Error: "unable to update post." });
     }
 });
-const destroy = (req, res) => __awaiter(this, void 0, void 0, function* () {
+const destroy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.id;
     try {
         const deletedPost = yield db.Post.findByIdAndDelete(postId);
@@ -104,7 +127,7 @@ const comments = (req, res) => {
     });
 };
 module.exports = {
-    index,
+    index: exports.index,
     create,
     show,
     update,

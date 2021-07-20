@@ -1,7 +1,7 @@
-const db = require("../models");
+import * as db from "../models";
 
 // ALL POSTS
-const index = async (req, res) => {
+export const index = async (req, res) => {
   try {
     const foundPosts = await db.Post.find({}).populate("user", {
       password: 0,

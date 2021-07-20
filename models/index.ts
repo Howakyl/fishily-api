@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import User from "./User";
+import Post from "./Post";
+import Comment from "./Comment";
 
 const connectionString =
   process.env.NODE_ENV === "production"
@@ -16,6 +19,4 @@ mongoose
   .then(() => console.log("MongoDB successfully connected..."))
   .catch((err: Error) => console.log(`MongoDB connection error: ${err}`));
 
-export const User = require('./User')
-export const Post = require('./Post')
-export const Comment = require('./Comment')
+export { User, Post, Comment };
