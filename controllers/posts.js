@@ -1,4 +1,4 @@
-const db = require("../models/");
+const db = require("../models");
 
 // ALL POSTS
 const index = async (req, res) => {
