@@ -2,7 +2,7 @@
   "name": "fishily-api",
   "version": "1.0.0",
   "description": "Find your new favorite fishing spot!",
-  "main": "server.ts",
+  "main": "built/server.js",
   "scripts": {
     "watch" : "tsc -w",
     "devStart": "nodemon built/server.js",

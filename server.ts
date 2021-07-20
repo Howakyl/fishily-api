@@ -1,10 +1,8 @@
 import path from "path";
-
 import express from "express";
 require("dotenv").config();
 import cors from "cors";
-// import routes from "../routes";
-const routes = require("../routes")
+import * as routes from "./routes";
 import session from "express-session";
 
 const port = process.env.PORT || 4000;
