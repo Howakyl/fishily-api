@@ -1,7 +1,9 @@
-const db = require("../models/");
-
+import * as db from "../models";
+import mongoose from 'mongoose'
+import {Request, Response} from 'express'
 // ALL POSTS
-const index = async (req, res) => {
+
+const index = async (_: any, res: Response) => {
   try {
     const foundPosts = await db.Post.find({}).populate("user", {
       password: 0,
@@ -15,7 +17,7 @@ const index = async (req, res) => {
 };
 
 // SHOW POST
-const show = async (req, res) => {
+const show = async (req: Request, res: Response) => {
   try {
     const foundPost = await db.Post.findById(req.params.id)
       .populate("user", { password: 0, bio: 0 })
@@ -34,7 +36,7 @@ const show = async (req, res) => {
 };
 
 // ADD POSTS
-const create = async (req, res) => {
+const create = async (req: Request, res: Response) => {
   const userId = req.params.id;
   try {
     const foundUser = await db.User.findById(userId);
@@ -50,7 +52,7 @@ const create = async (req, res) => {
 };
 
 //UPDATE POST
-const update = async (req, res) => {
+const update = async (req: Request, res: Response) => {
   const postId = req.params.id;
   try {
     const updatedPost = await db.Post.findByIdAndUpdate(postId, req.body, {
@@ -64,12 +66,13 @@ const update = async (req, res) => {
 };
 
 //DELETE POST, DELETES POST ON USER, COMMENTS FROM USER
-const destroy = async (req, res) => {
+
+const destroy = async (req: Request, res: Response) => {
   const postId = req.params.id;
   try {
     const deletedPost = await db.Post.findByIdAndDelete(postId);
     await db.Comment.deleteMany({ _id: { $in: deletedPost.comments } });
-    await db.User.findOne({ posts: postId }, (error, foundUser) => {
+    await db.User.findOne({ posts: postId }, (error: Error, foundUser) => {
       if (error) return console.log(error);
       foundUser.posts.remove(postId);
       if (deletedPost.comments.length > 0) {
@@ -85,7 +88,7 @@ const destroy = async (req, res) => {
 };
 
 // ALL POST COMMENTS
-const comments = (req, res) => {
+const comments = (req: Request, res: Response) => {
   db.Post.findById(req.params.id)
     .populate("comments")
     .then((foundPost) => {
@@ -96,6 +99,7 @@ const comments = (req, res) => {
       res.json({ Error: "Unable to fetch comments" });
     });
 };
+
 
 module.exports = {
   index,

@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
+
 
 const UserSchema = new Schema(
   {
@@ -29,13 +30,13 @@ const UserSchema = new Schema(
     },
     posts: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Post",
       },
     ],
     comments: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Comment",
       },
     ],
@@ -44,5 +45,4 @@ const UserSchema = new Schema(
 );
 
 const User = mongoose.model("User", UserSchema);
-
-module.exports = User;
+export default User;

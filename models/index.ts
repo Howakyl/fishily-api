@@ -1,4 +1,7 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import User from "./User";
+import Post from "./Post";
+import Comment from "./Comment";
 
 const connectionString =
   process.env.NODE_ENV === "production"
@@ -14,10 +17,6 @@ const configOptions = {
 mongoose
   .connect(connectionString, configOptions)
   .then(() => console.log("MongoDB successfully connected..."))
-  .catch((err) => console.log(`MongoDB connection error: ${err}`));
+  .catch((err: Error) => console.log(`MongoDB connection error: ${err}`));
 
-module.exports = {
-  User: require("./User"),
-  Post: require("./Post"),
-  Comment: require("./Comment"),
-};
+export { User, Post, Comment };
