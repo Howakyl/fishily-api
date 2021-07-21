@@ -5,7 +5,7 @@
   "main": "built/server.js",
   "scripts": {
     "watch": "tsc -w",
-    "devStart": "nodemon built/server.js",
+    "dev": "nodemon built/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node built/server.js",
     "publishToHeroku": "cd ../ && git subtree push --prefix fishily-api heroku-fishily-backend main || true"
