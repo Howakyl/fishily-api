@@ -68,9 +68,11 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const foundUser = yield db.User.findById(userId);
         req.body.user = userId;
         const createdPost = yield db.Post.create(req.body);
-        foundUser.posts.push(createdPost._id);
-        yield foundUser.save();
-        res.json({ post: createdPost });
+        if (foundUser) {
+            foundUser.posts.push(createdPost._id);
+            yield foundUser.save();
+            res.json({ post: createdPost });
+        }
     }
     catch (error) {
         if (error)

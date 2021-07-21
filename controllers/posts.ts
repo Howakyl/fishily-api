@@ -1,5 +1,4 @@
 import * as db from "../models";
-import mongoose from 'mongoose'
 import {Request, Response} from 'express'
 // ALL POSTS
 
@@ -42,9 +41,11 @@ const create = async (req: Request, res: Response) => {
     const foundUser = await db.User.findById(userId);
     req.body.user = userId;
     const createdPost = await db.Post.create(req.body);
-    foundUser.posts.push(createdPost._id);
-    await foundUser.save();
-    res.json({ post: createdPost });
+    if (foundUser) {
+      foundUser.posts.push(createdPost._id);
+      await foundUser.save();
+      res.json({ post: createdPost });
+    }
   } catch (error) {
     if (error) console.log(error);
     res.json({ Error: "No user found." });
@@ -72,7 +73,7 @@ const destroy = async (req: Request, res: Response) => {
   try {
     const deletedPost = await db.Post.findByIdAndDelete(postId);
     await db.Comment.deleteMany({ _id: { $in: deletedPost.comments } });
-    await db.User.findOne({ posts: postId }, (error: Error, foundUser) => {
+    await db.User.findOne({ posts: postId }, (error: Error, foundUser: any) => {
       if (error) return console.log(error);
       foundUser.posts.remove(postId);
       if (deletedPost.comments.length > 0) {
@@ -91,10 +92,10 @@ const destroy = async (req: Request, res: Response) => {
 const comments = (req: Request, res: Response) => {
   db.Post.findById(req.params.id)
     .populate("comments")
-    .then((foundPost) => {
+    .then((foundPost: any) => {
       res.json({ comments: foundPost.comments });
     })
-    .catch((err) => {
+    .catch((err: Error) => {
       if (err) console.log(err);
       res.json({ Error: "Unable to fetch comments" });
     });
