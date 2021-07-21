@@ -32,13 +32,13 @@ const UserSchema = new Schema({
     },
     posts: [
         {
-            type: mongoose_1.default.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Post",
         },
     ],
     comments: [
         {
-            type: mongoose_1.default.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Comment",
         },
     ],

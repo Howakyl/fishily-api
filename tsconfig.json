@@ -23,7 +23,8 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "typeRoots": [
-      "types.ts"
+      "./node_modules/@types/", 
+      "./node_modules/mongoose/index.d.ts"
     ]
   },
   "exclude": ["node_modules"],

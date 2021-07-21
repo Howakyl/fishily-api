@@ -28,9 +28,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.index = void 0;
 const db = __importStar(require("../models"));
-const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const index = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const foundPosts = yield db.Post.find({}).populate("user", {
             password: 0,
@@ -44,7 +43,6 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.json({ error: "Unable to retrieve posts." });
     }
 });
-exports.index = index;
 const show = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const foundPost = yield db.Post.findById(req.params.id)
@@ -127,7 +125,7 @@ const comments = (req, res) => {
     });
 };
 module.exports = {
-    index: exports.index,
+    index,
     create,
     show,
     update,
