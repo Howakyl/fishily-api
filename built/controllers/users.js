@@ -101,7 +101,7 @@ const logOut = (req, _) => {
     if (req.session) {
         req.session.destroy((err) => {
             if (err) {
-                return console.log('error logging out: ', err);
+                return console.log("error logging out: ", err);
             }
         });
     }

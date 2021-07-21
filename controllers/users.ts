@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import {Request, Response} from 'express';
-import {MyContext} from '../types/types';
+import { Request, Response } from "express";
+import { MyContext } from "../types/types";
 import * as db from "../models";
 
 // ALL USERS
@@ -15,7 +15,7 @@ const index = (_: any, res: Response) => {
     });
 };
 
-// SHOW ONE USer
+// SHOW ONE User
 const show = (req: Request, res: Response) => {
   db.User.findById(req.params.id)
     .populate("posts")
@@ -82,11 +82,11 @@ const logOut = (req: Request, _: any) => {
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
-        return console.log('error logging out: ',err)
+        return console.log("error logging out: ", err);
       }
       // ELSE:
       // req.session = null;
-    })
+    });
   }
 };
 
