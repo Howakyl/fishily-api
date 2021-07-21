@@ -1,7 +1,8 @@
-// import { Request, Response } from "express";
-// import { Session, SessionData } from "express-session";
+import { Request } from "express";
+import { Session, SessionData } from "express-session";
 
-// export type MyContext = {
-//   res: Express.Response;
-//   req: Request & { session: Session & Partial<SessionData> };
-// };
+export type MyContext = {
+  req: Request & {
+    session: Session & Partial<SessionData> & { currentUser?: object };
+  };
+};

@@ -1,5 +1,6 @@
 import * as db from "../models";
-import {Request, Response} from 'express'
+import {Request, Response} from 'express';
+
 // ALL POSTS
 
 const index = async (_: any, res: Response) => {

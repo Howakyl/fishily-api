@@ -1,3 +1,23 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,9 +27,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const bcrypt = require("bcryptjs");
-const db = require("../models");
-const index = (req, res) => {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const db = __importStar(require("../models"));
+const index = (_, res) => {
     db.User.find({}, { password: 0 })
         .then((foundUsers) => {
         res.json({ users: foundUsers });
@@ -38,10 +62,10 @@ const create = (req, res) => {
             console.log("User Account Already Exists");
             return res.json({ Error: "User already exists." });
         }
-        bcrypt.genSalt(10, (err, salt) => {
+        bcryptjs_1.default.genSalt(10, (err, salt) => {
             if (err)
                 return console.log(err);
-            bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
+            bcryptjs_1.default.hash(req.body.password, salt, (err, hashedPassword) => {
                 if (err)
                     return console.log(err);
                 const newUser = {
@@ -73,25 +97,24 @@ const update = (req, res) => {
         res.json({ Error: "Unable to update user." });
     });
 };
-const logOut = (req, res) => {
+const logOut = (req, _) => {
     if (req.session) {
         req.session.destroy((err) => {
             if (err) {
                 return console.log('error logging out: ', err);
             }
-            else {
-                req.session = null;
-            }
         });
     }
 };
-const deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.id;
     try {
         const deletedUser = yield db.User.findByIdAndDelete(userId);
-        yield db.Post.deleteMany({ _id: { $in: deletedUser.posts } });
-        yield db.Comment.deleteMany({ _id: { $in: deletedUser.comments } });
-        res.json({ user: deletedUser });
+        if (deletedUser) {
+            yield db.Post.deleteMany({ _id: { $in: deletedUser.posts } });
+            yield db.Comment.deleteMany({ _id: { $in: deletedUser.comments } });
+            res.json({ user: deletedUser });
+        }
     }
     catch (error) {
         console.log("error deleting user: ", error);
@@ -106,7 +129,7 @@ const logIn = (req, res) => {
             console.log("Login Route: No User Found");
             res.json({ Error: "no user found." });
         }
-        bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
+        bcryptjs_1.default.compare(req.body.password, user.password, (err, isMatch) => {
             if (err)
                 return console.log("error comparing passwords");
             if (isMatch) {

@@ -1,8 +1,10 @@
-const bcrypt = require("bcryptjs");
-const db = require("../models");
+import bcrypt from "bcryptjs";
+import {Request, Response} from 'express';
+import {MyContext} from '../types/types';
+import * as db from "../models";
 
 // ALL USERS
-const index = (req, res) => {
+const index = (_: any, res: Response) => {
   db.User.find({}, { password: 0 })
     .then((foundUsers) => {
       res.json({ users: foundUsers });
@@ -13,8 +15,8 @@ const index = (req, res) => {
     });
 };
 
-// SHOW ONE USEr
-const show = (req, res) => {
+// SHOW ONE USer
+const show = (req: Request, res: Response) => {
   db.User.findById(req.params.id)
     .populate("posts")
     .then((foundUser) => {
@@ -27,8 +29,8 @@ const show = (req, res) => {
 };
 
 // CREATE USER
-const create = (req, res) => {
-  db.User.findOne({ username: req.body.username }, (err, user) => {
+const create = (req: Request, res: Response) => {
+  db.User.findOne({ username: req.body.username }, (err: Error, user: any) => {
     if (err) return console.log(err);
 
     if (user) {
@@ -64,7 +66,7 @@ const create = (req, res) => {
 };
 
 // UPDATE USER
-const update = (req, res) => {
+const update = (req: Request, res: Response) => {
   db.User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((updatedUser) => {
       res.json({ user: updatedUser });
@@ -76,27 +78,28 @@ const update = (req, res) => {
 };
 
 // LOG OUT USER
-const logOut = (req, res) => {
+const logOut = (req: Request, _: any) => {
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
         return console.log('error logging out: ',err)
-      } else {
-        req.session = null;
-
       }
+      // ELSE:
+      // req.session = null;
     })
   }
 };
 
 // DELETE USER
-const deleteUser = async (req, res) => {
+const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
   try {
     const deletedUser = await db.User.findByIdAndDelete(userId);
-    await db.Post.deleteMany({ _id: { $in: deletedUser.posts } });
-    await db.Comment.deleteMany({ _id: { $in: deletedUser.comments } });
-    res.json({ user: deletedUser });
+    if (deletedUser) {
+      await db.Post.deleteMany({ _id: { $in: deletedUser.posts } });
+      await db.Comment.deleteMany({ _id: { $in: deletedUser.comments } });
+      res.json({ user: deletedUser });
+    }
   } catch (error) {
     console.log("error deleting user: ", error);
     res.json({ Error: "unable to delete user" });
@@ -104,10 +107,9 @@ const deleteUser = async (req, res) => {
 };
 
 // LOG IN USER
-const logIn = (req, res) => {
-  db.User.findOne({ username: req.body.username }, (err, user) => {
+const logIn = (req: MyContext["req"], res: Response) => {
+  db.User.findOne({ username: req.body.username }, (err: Error, user: any) => {
     if (err) return console.log(err);
-
     if (!user) {
       console.log("Login Route: No User Found");
       res.json({ Error: "no user found." });
