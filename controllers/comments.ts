@@ -1,7 +1,8 @@
-const db = require("../models");
+import * as db from "../models";
+import {Request, Response} from 'express';
 
 // ALL COMMENTS
-const index = async (req, res) => {
+const index = async (_: any, res: Response) => {
   try {
     const data = await db.Comment.find({});
     res.json({ comments: data });
@@ -12,7 +13,7 @@ const index = async (req, res) => {
 };
 
 // SHOW ONE COMMENT
-const show = async (req, res) => {
+const show = async (req: Request, res: Response) => {
   try {
     const data = await db.Comment.findById(req.params.id).populate("user", {
       password: 0,
@@ -26,7 +27,7 @@ const show = async (req, res) => {
 };
 
 // CREATE COMMENT
-const create = async (req, res) => {
+const create = async (req: Request, res: Response) => {
   const postId = req.params.id;
   try {
     const foundPost = await db.Post.findById(postId);
@@ -36,8 +37,10 @@ const create = async (req, res) => {
     foundPost.save();
     try {
       const foundUser = await db.User.findById(createdComment.user);
-      foundUser.comments.push(createdComment._id);
-      foundUser.save();
+      if (foundUser) {
+        foundUser.comments.push(createdComment._id);
+        foundUser.save();
+      }
     } finally {
       res.json({ comment: createdComment });
     }
@@ -48,7 +51,7 @@ const create = async (req, res) => {
 };
 
 // EDIT COMMENT
-const update = async (req, res) => {
+const update = async (req: Request, res: Response) => {
   const commentId = req.params.id;
   try {
     const updatedComment = await db.Comment.findByIdAndUpdate(
@@ -64,23 +67,23 @@ const update = async (req, res) => {
 };
 
 // DELETE COMMENT, REMOVE FROM POST AND USER
-const destroy = async (req, res) => {
+const destroy = async (req: Request, res: Response) => {
   const commentId = req.params.id;
   try {
     const deletedComment = await db.Comment.findByIdAndDelete(commentId);
-    await db.User.findOne({ comments: commentId }, (err, foundUser) => {
+    await db.User.findOne({ comments: commentId }, (err: Error, foundUser: any) => {
       if (err) return console.log(err);
       if (foundUser) {
         foundUser.comments.remove(commentId);
-        foundUser.save((err, savedUser) => {
+        foundUser.save((err: Error, _: any) => {
           if (err) return console.log(err);
         });
       }
     });
-    await db.Post.findOne({ comments: commentId }, (err, foundPost) => {
+    await db.Post.findOne({ comments: commentId }, (err: Error, foundPost: any) => {
       if (err) return console.log(err);
       foundPost.comments.remove(commentId);
-      foundPost.save((err, savedPost) => {
+      foundPost.save((err: Error, _: any) => {
         if (err) return console.log(err);
       });
     });

@@ -1,18 +1,19 @@
-const express = require("express");
+import path from "path";
+import express from "express";
 require("dotenv").config();
-const cors = require("cors");
-const routes = require("./routes");
-const session = require("express-session");
+import cors from "cors";
+import * as routes from "./routes";
+import session from "express-session";
 
 const port = process.env.PORT || 4000;
 const app = express();
 
-let origin;
-// if (process.env.NODE_ENV === "production") {
+let origin = '';
+if (process.env.NODE_ENV === "production") {
   origin = "https://fishily.netlify.app";
-// } else {
-//   origin = "http://localhost:3000";
-// }
+} else {
+  origin = "http://localhost:3000";
+}
 const corsOptions = {
   origin: origin,
 };
@@ -23,12 +24,13 @@ app.use(cors(corsOptions));
 //EXPRESS SESSION
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7 * 2,
     },
+    
   })
 );
 
@@ -39,7 +41,7 @@ app.use("/api/fishily/comments", routes.comments);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("fishily-client/build"));
-  app.get("*", (req, res) => {
+  app.get("*", (res: { sendFile: (arg0: any) => void; }) => {
     res.sendFile(
       path.resolve(__dirname, "fishily-client", "build", "index.html")
     );
