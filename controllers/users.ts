@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { MyContext } from "../types/types";
 import * as db from "../models";
-import {User as UserI} from '../models/User';
+import { User as UserI } from "../models/User";
 
 // ALL USERS
 const index = (_: any, res: Response) => {
@@ -20,7 +20,7 @@ const index = (_: any, res: Response) => {
 const show = (req: Request, res: Response) => {
   db.User.findById(req.params.id)
     .populate("posts")
-    .then((foundUser: (UserI | null)) => {
+    .then((foundUser: UserI | null) => {
       res.json({ user: foundUser });
     })
     .catch((err) => {
@@ -31,39 +31,42 @@ const show = (req: Request, res: Response) => {
 
 // CREATE USER
 const create = (req: Request, res: Response) => {
-  db.User.findOne({ username: req.body.username }, (err: Error, user: UserI) => {
-    if (err) return console.log(err);
-
-    if (user) {
-      console.log("User Account Already Exists");
-      return res.json({ Error: "User already exists." });
-    }
-
-    bcrypt.genSalt(10, (err, salt) => {
+  db.User.findOne(
+    { username: req.body.username },
+    (err: Error, user: UserI) => {
       if (err) return console.log(err);
 
-      bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
+      if (user) {
+        console.log("User Account Already Exists");
+        return res.json({ Error: "User already exists." });
+      }
+
+      bcrypt.genSalt(10, (err, salt) => {
         if (err) return console.log(err);
 
-        const newUser = {
-          username: req.body.username,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          password: hashedPassword,
-          bio: req.body.bio,
-        };
+        bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
+          if (err) return console.log(err);
 
-        db.User.create(newUser)
-          .then((createdUser) => {
-            res.json({ user: createdUser });
-          })
-          .catch((err) => {
-            console.log("error creating user: ", err);
-            res.json({ Error: "Unable to create user." });
-          });
+          const newUser = {
+            username: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: hashedPassword,
+            bio: req.body.bio,
+          };
+
+          db.User.create(newUser)
+            .then((createdUser) => {
+              res.json({ user: createdUser });
+            })
+            .catch((err) => {
+              console.log("error creating user: ", err);
+              res.json({ Error: "Unable to create user." });
+            });
+        });
       });
-    });
-  });
+    }
+  );
 };
 
 // UPDATE USER
