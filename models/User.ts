@@ -1,15 +1,15 @@
 import { model, Schema, ObjectId, Document } from "mongoose";
 
 export interface User extends Document {
+  _id: ObjectId;
   picture?: string;
   posts: string[];
   comments: string[];
-  _id: ObjectId;
   username: string;
   lastName?: string;
   firstName?: string;
   password: string;
-  bio?: string; 
+  bio?: string;
 }
 
 const UserSchema = new Schema<User>(

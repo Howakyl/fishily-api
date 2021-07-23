@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { MyContext } from "../types/types";
 import * as db from "../models";
+import {User as UserI} from '../models/User';
 
 // ALL USERS
 const index = (_: any, res: Response) => {
@@ -19,7 +20,7 @@ const index = (_: any, res: Response) => {
 const show = (req: Request, res: Response) => {
   db.User.findById(req.params.id)
     .populate("posts")
-    .then((foundUser) => {
+    .then((foundUser: (UserI | null)) => {
       res.json({ user: foundUser });
     })
     .catch((err) => {
@@ -30,7 +31,7 @@ const show = (req: Request, res: Response) => {
 
 // CREATE USER
 const create = (req: Request, res: Response) => {
-  db.User.findOne({ username: req.body.username }, (err: Error, user: any) => {
+  db.User.findOne({ username: req.body.username }, (err: Error, user: UserI) => {
     if (err) return console.log(err);
 
     if (user) {
