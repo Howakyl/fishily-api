@@ -94,7 +94,7 @@ const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.json({ user: updatedUser });
     }
     catch (error) {
-        console.log('error updating user', error);
+        console.log("error updating user", error);
         res.json({ Error: "unable to update user." });
     }
 });

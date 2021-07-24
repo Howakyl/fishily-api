@@ -68,16 +68,20 @@ const create = async (req: Request, res: Response): Promise<void> => {
 // UPDATE USER
 const update = async (req: Request, res: Response): Promise<void> => {
   try {
-    const updatedUser: UserI | null = await db.User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    const updatedUser: UserI | null = await db.User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
     res.json({ user: updatedUser });
   } catch (error) {
-    console.log('error updating user', error);
+    console.log("error updating user", error);
     res.json({ Error: "unable to update user." });
   }
-}
+};
 
 // LOG OUT USER
-const logOut = (req: Request, _: any) => {
+const logOut = (req: Request, _: any): void => {
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
@@ -90,10 +94,10 @@ const logOut = (req: Request, _: any) => {
 };
 
 // DELETE USER
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
   const userId = req.params.id;
   try {
-    const deletedUser = await db.User.findByIdAndDelete(userId);
+    const deletedUser: UserI | null = await db.User.findByIdAndDelete(userId);
     if (deletedUser) {
       await db.Post.deleteMany({ _id: { $in: deletedUser.posts } });
       await db.Comment.deleteMany({ _id: { $in: deletedUser.comments } });
