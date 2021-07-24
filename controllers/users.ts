@@ -5,15 +5,14 @@ import * as db from "../models";
 import { User as UserI } from "../models/User";
 
 // ALL USERS
-const index = (_: any, res: Response) => {
-  db.User.find({}, { password: 0 })
-    .then((foundUsers) => {
-      res.json({ users: foundUsers });
-    })
-    .catch((err) => {
-      console.log("error: ", err);
-      res.json({ Error: "Unable to retrieve user data. " });
-    });
+const index = async (_: any, res: Response): Promise<void> => {
+  try {
+    const foundUsers: UserI[] = await db.User.find({}, { password: 0 });
+    res.json({ users: foundUsers });
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Unable to retrieve users." });
+  }
 };
 
 // SHOW ONE User

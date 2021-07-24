@@ -33,16 +33,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const db = __importStar(require("../models"));
-const index = (_, res) => {
-    db.User.find({}, { password: 0 })
-        .then((foundUsers) => {
+const index = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const foundUsers = yield db.User.find({}, { password: 0 });
         res.json({ users: foundUsers });
-    })
-        .catch((err) => {
-        console.log("error: ", err);
-        res.json({ Error: "Unable to retrieve user data. " });
-    });
-};
+    }
+    catch (error) {
+        console.log(error);
+        res.json({ error: "Unable to retrieve users." });
+    }
+});
 const show = (req, res) => {
     db.User.findById(req.params.id)
         .populate("posts")
