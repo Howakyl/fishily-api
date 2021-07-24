@@ -16,16 +16,15 @@ const index = async (_: any, res: Response): Promise<void> => {
 };
 
 // SHOW ONE User
-const show = (req: Request, res: Response) => {
-  db.User.findById(req.params.id)
-    .populate("posts")
-    .then((foundUser: UserI | null) => {
-      res.json({ user: foundUser });
-    })
-    .catch((err) => {
-      console.log("error fetching user data", err);
-      res.json({ Error: "Unable to fetch user data" });
-    });
+const show = async (req: Request, res: Response) => {
+  try {
+    const foundUser: UserI | null = await db.User.findById(req.params.id)
+    .populate("posts");
+    res.json({user: foundUser });
+  } catch (error) {
+    console.log('error fetching user data', error);
+    res.json({Error: "Unable to fetch user data"});
+  }
 };
 
 // CREATE USER

@@ -43,17 +43,17 @@ const index = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.json({ error: "Unable to retrieve users." });
     }
 });
-const show = (req, res) => {
-    db.User.findById(req.params.id)
-        .populate("posts")
-        .then((foundUser) => {
+const show = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const foundUser = yield db.User.findById(req.params.id)
+            .populate("posts");
         res.json({ user: foundUser });
-    })
-        .catch((err) => {
-        console.log("error fetching user data", err);
+    }
+    catch (error) {
+        console.log('error fetching user data', error);
         res.json({ Error: "Unable to fetch user data" });
-    });
-};
+    }
+});
 const create = (req, res) => {
     db.User.findOne({ username: req.body.username }, (err, user) => {
         if (err)
