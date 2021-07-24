@@ -66,16 +66,15 @@ const create = async (req: Request, res: Response): Promise<void> => {
 };
 
 // UPDATE USER
-const update = (req: Request, res: Response) => {
-  db.User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then((updatedUser) => {
-      res.json({ user: updatedUser });
-    })
-    .catch((err) => {
-      console.log("error updating user: ", err);
-      res.json({ Error: "Unable to update user." });
-    });
-};
+const update = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const updatedUser: UserI | null = await db.User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    res.json({ user: updatedUser });
+  } catch (error) {
+    console.log('error updating user', error);
+    res.json({ Error: "unable to update user." });
+  }
+}
 
 // LOG OUT USER
 const logOut = (req: Request, _: any) => {

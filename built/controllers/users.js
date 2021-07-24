@@ -88,16 +88,16 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     });
 });
-const update = (req, res) => {
-    db.User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        .then((updatedUser) => {
+const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updatedUser = yield db.User.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.json({ user: updatedUser });
-    })
-        .catch((err) => {
-        console.log("error updating user: ", err);
-        res.json({ Error: "Unable to update user." });
-    });
-};
+    }
+    catch (error) {
+        console.log('error updating user', error);
+        res.json({ Error: "unable to update user." });
+    }
+});
 const logOut = (req, _) => {
     if (req.session) {
         req.session.destroy((err) => {
