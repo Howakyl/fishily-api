@@ -110,25 +110,28 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 // LOG IN USER
-const logIn = (req: MyContext["req"], res: Response) => {
-  db.User.findOne({ username: req.body.username }, (err: Error, user: any) => {
-    if (err) return console.log(err);
-    if (!user) {
-      console.log("Login Route: No User Found");
-      res.json({ Error: "no user found." });
-    }
-
-    // Verify user password with login password
-    bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
-      if (err) return console.log("error comparing passwords");
-
-      if (isMatch) {
-        req.session.currentUser = user;
-        console.log("successfully logged in!");
-        res.send(req.session.currentUser);
+const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
+  db.User.findOne(
+    { username: req.body.username },
+    (err: Error, user: UserI) => {
+      if (err) return console.log(err);
+      if (!user) {
+        console.log("Login Route: No User Found");
+        res.json({ Error: "no user found." });
       }
-    });
-  });
+
+      // Verify user password with login password
+      bcrypt.compare(req.body.password, user.password, (err, isMatch) => {
+        if (err) return console.log("error comparing passwords");
+
+        if (isMatch) {
+          req.session.currentUser = user;
+          console.log("successfully logged in!");
+          res.send(req.session.currentUser);
+        }
+      });
+    }
+  );
 };
 
 module.exports = {

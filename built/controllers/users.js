@@ -122,7 +122,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.json({ Error: "unable to delete user" });
     }
 });
-const logIn = (req, res) => {
+const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     db.User.findOne({ username: req.body.username }, (err, user) => {
         if (err)
             return console.log(err);
@@ -140,7 +140,7 @@ const logIn = (req, res) => {
             }
         });
     });
-};
+});
 module.exports = {
     index,
     show,
