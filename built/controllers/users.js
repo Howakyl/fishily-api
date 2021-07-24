@@ -45,48 +45,49 @@ const index = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const show = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const foundUser = yield db.User.findById(req.params.id)
-            .populate("posts");
+        const foundUser = yield db.User.findById(req.params.id).populate("posts");
         res.json({ user: foundUser });
     }
     catch (error) {
-        console.log('error fetching user data', error);
+        console.log("error fetching user data", error);
         res.json({ Error: "Unable to fetch user data" });
     }
 });
-const create = (req, res) => {
-    db.User.findOne({ username: req.body.username }, (err, user) => {
+const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield db.User.findOne({ username: req.body.username }, (err, user) => {
         if (err)
             return console.log(err);
         if (user) {
-            console.log("User Account Already Exists");
+            console.log("User Account Already Exists.");
             return res.json({ Error: "User already exists." });
         }
         bcryptjs_1.default.genSalt(10, (err, salt) => {
             if (err)
                 return console.log(err);
-            bcryptjs_1.default.hash(req.body.password, salt, (err, hashedPassword) => {
+            bcryptjs_1.default.hash(req.body.password, salt, (err, hashedPassword) => __awaiter(void 0, void 0, void 0, function* () {
                 if (err)
                     return console.log(err);
-                const newUser = {
+                const createdUser = {
                     username: req.body.username,
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     password: hashedPassword,
                     bio: req.body.bio,
+                    posts: [],
+                    comments: [],
                 };
-                db.User.create(newUser)
-                    .then((createdUser) => {
-                    res.json({ user: createdUser });
-                })
-                    .catch((err) => {
-                    console.log("error creating user: ", err);
+                try {
+                    const user = yield db.User.create(createdUser);
+                    res.json({ user: user });
+                }
+                catch (error) {
+                    console.log("error creating user", error);
                     res.json({ Error: "Unable to create user." });
-                });
-            });
+                }
+            }));
         });
     });
-};
+});
 const update = (req, res) => {
     db.User.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((updatedUser) => {

@@ -16,51 +16,49 @@ const index = async (_: any, res: Response): Promise<void> => {
 };
 
 // SHOW ONE User
-const show = async (req: Request, res: Response) => {
+const show = async (req: Request, res: Response): Promise<void> => {
   try {
-    const foundUser: UserI | null = await db.User.findById(req.params.id)
-    .populate("posts");
-    res.json({user: foundUser });
+    const foundUser: UserI | null = await db.User.findById(
+      req.params.id
+    ).populate("posts");
+    res.json({ user: foundUser });
   } catch (error) {
-    console.log('error fetching user data', error);
-    res.json({Error: "Unable to fetch user data"});
+    console.log("error fetching user data", error);
+    res.json({ Error: "Unable to fetch user data" });
   }
 };
 
-// CREATE USER
-const create = (req: Request, res: Response) => {
-  db.User.findOne(
+const create = async (req: Request, res: Response): Promise<void> => {
+  await db.User.findOne(
     { username: req.body.username },
     (err: Error, user: UserI) => {
       if (err) return console.log(err);
-
       if (user) {
-        console.log("User Account Already Exists");
+        console.log("User Account Already Exists.");
         return res.json({ Error: "User already exists." });
       }
 
       bcrypt.genSalt(10, (err, salt) => {
         if (err) return console.log(err);
-
-        bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
+        bcrypt.hash(req.body.password, salt, async (err, hashedPassword) => {
           if (err) return console.log(err);
 
-          const newUser = {
+          const createdUser: UserI = {
             username: req.body.username,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             password: hashedPassword,
             bio: req.body.bio,
+            posts: [],
+            comments: [],
           };
-
-          db.User.create(newUser)
-            .then((createdUser) => {
-              res.json({ user: createdUser });
-            })
-            .catch((err) => {
-              console.log("error creating user: ", err);
-              res.json({ Error: "Unable to create user." });
-            });
+          try {
+            const user = await db.User.create(createdUser);
+            res.json({ user: user });
+          } catch (error) {
+            console.log("error creating user", error);
+            res.json({ Error: "Unable to create user." });
+          }
         });
       });
     }
