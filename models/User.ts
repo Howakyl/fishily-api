@@ -1,15 +1,16 @@
-import { model, Schema, ObjectId, Document } from "mongoose";
+import { model, Schema, Document } from "mongoose";
+import { Post } from "./Post";
+import { Comment } from "./Comment";
 
 export interface User extends Document {
   picture?: string;
-  posts: string[];
-  comments: string[];
-  _id: ObjectId;
+  posts: Post & Post[];
+  comments: Comment & Comment[];
   username: string;
   lastName?: string;
   firstName?: string;
   password: string;
-  bio?: string; 
+  bio?: string;
 }
 
 const UserSchema = new Schema<User>(

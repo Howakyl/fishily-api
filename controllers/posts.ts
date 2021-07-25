@@ -1,5 +1,7 @@
 import * as db from "../models";
-import {Request, Response} from 'express';
+import { Post as PostI } from "../models/Post";
+import { User as UserI } from "../models/User";
+import { Request, Response } from "express";
 
 // ALL POSTS
 
@@ -17,7 +19,7 @@ const index = async (_: any, res: Response) => {
 };
 
 // SHOW POST
-const show = async (req: Request, res: Response) => {
+const show = async (req: Request, res: Response): Promise<void> => {
   try {
     const foundPost = await db.Post.findById(req.params.id)
       .populate("user", { password: 0, bio: 0 })
@@ -35,7 +37,7 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
-// ADD POSTS
+// CREATE Post
 const create = async (req: Request, res: Response) => {
   const userId = req.params.id;
   try {
@@ -72,16 +74,21 @@ const update = async (req: Request, res: Response) => {
 const destroy = async (req: Request, res: Response) => {
   const postId = req.params.id;
   try {
-    const deletedPost = await db.Post.findByIdAndDelete(postId);
-    await db.Comment.deleteMany({ _id: { $in: deletedPost.comments } });
-    await db.User.findOne({ posts: postId }, (error: Error, foundUser: any) => {
-      if (error) return console.log(error);
-      foundUser.posts.remove(postId);
-      if (deletedPost.comments.length > 0) {
-        foundUser.comments.remove(deletedPost.comments);
-      } 
-      foundUser.save();
-    });
+    const deletedPost: PostI | null = await db.Post.findByIdAndDelete(postId);
+    await db.Comment.deleteMany({ _id: { $in: deletedPost!.comments } });
+    await db.User.findOne(
+      { posts: deletedPost!._id },
+      (error: Error, foundUser: UserI) => {
+        if (error) return console.log(error);
+        foundUser.posts.remove(deletedPost!._id);
+        if (deletedPost) {
+          if (deletedPost.comments.length > 0) {
+            foundUser.comments.remove(deletedPost.comments);
+          }
+          foundUser.save();
+        }
+      }
+    );
     res.json({ post: deletedPost });
   } catch (error) {
     console.log("error deleting post: ", error);
@@ -101,7 +108,6 @@ const comments = (req: Request, res: Response) => {
       res.json({ Error: "Unable to fetch comments" });
     });
 };
-
 
 module.exports = {
   index,

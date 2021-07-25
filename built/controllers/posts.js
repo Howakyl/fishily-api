@@ -98,14 +98,16 @@ const destroy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const deletedPost = yield db.Post.findByIdAndDelete(postId);
         yield db.Comment.deleteMany({ _id: { $in: deletedPost.comments } });
-        yield db.User.findOne({ posts: postId }, (error, foundUser) => {
+        yield db.User.findOne({ posts: deletedPost._id }, (error, foundUser) => {
             if (error)
                 return console.log(error);
-            foundUser.posts.remove(postId);
-            if (deletedPost.comments.length > 0) {
-                foundUser.comments.remove(deletedPost.comments);
+            foundUser.posts.remove(deletedPost._id);
+            if (deletedPost) {
+                if (deletedPost.comments.length > 0) {
+                    foundUser.comments.remove(deletedPost.comments);
+                }
+                foundUser.save();
             }
-            foundUser.save();
         });
         res.json({ post: deletedPost });
     }
