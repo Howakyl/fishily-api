@@ -1,10 +1,11 @@
-import { model, Schema , Document} from "mongoose";
-// import { Post } from "./Post";
+import { model, Schema, Document } from "mongoose";
+import { Post } from "./Post";
+import { Comment } from "./Comment";
 
 export interface User extends Document {
   picture?: string;
-  posts: string[];
-  comments: string[];
+  posts: Post & Post[];
+  comments: Comment & Comment[];
   username: string;
   lastName?: string;
   firstName?: string;

@@ -1,7 +1,15 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+import { model, Schema, Document } from "mongoose";
+import { User } from "./User";
+import { Post } from "./Post";
 
-const CommentSchema = new Schema(
+export interface Comment extends Document {
+  description: string;
+  date: Date;
+  user: User;
+  post: Post;
+}
+
+const CommentSchema = new Schema<Comment>(
   {
     description: {
       type: String,
@@ -13,16 +21,16 @@ const CommentSchema = new Schema(
       default: Date.now(),
     },
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
     post: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Post",
     },
   },
   { timestamps: true }
 );
 
-const Comment = mongoose.model("Comment", CommentSchema);
+const Comment = model<Comment>("Comment", CommentSchema);
 export default Comment;

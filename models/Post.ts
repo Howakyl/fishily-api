@@ -1,5 +1,5 @@
-import {model, Schema, Document } from "mongoose";
-import {User} from './User';
+import { model, Schema, Document } from "mongoose";
+import { User } from "./User";
 
 export interface Post extends Document {
   title: string;

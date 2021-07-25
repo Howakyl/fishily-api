@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const Schema = mongoose_1.default.Schema;
-const CommentSchema = new Schema({
+const mongoose_1 = require("mongoose");
+const CommentSchema = new mongoose_1.Schema({
     description: {
         type: String,
         maxlength: 300,
@@ -16,14 +12,14 @@ const CommentSchema = new Schema({
         default: Date.now(),
     },
     user: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
+        type: mongoose_1.Schema.Types.ObjectId,
         ref: "User",
     },
     post: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
+        type: mongoose_1.Schema.Types.ObjectId,
         ref: "Post",
     },
 }, { timestamps: true });
-const Comment = mongoose_1.default.model("Comment", CommentSchema);
+const Comment = mongoose_1.model("Comment", CommentSchema);
 exports.default = Comment;
 //# sourceMappingURL=Comment.js.map
