@@ -1,5 +1,6 @@
 import { model, Schema, Document } from "mongoose";
 import { User } from "./User";
+import { Comment } from "./Comment";
 
 export interface Post extends Document {
   title: string;
@@ -11,7 +12,7 @@ export interface Post extends Document {
   lng: number;
   image: string;
   user: User;
-  comments: string[];
+  comments: Comment[];
 }
 
 const postSchema = new Schema<Post>(
