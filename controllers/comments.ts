@@ -1,6 +1,6 @@
 import * as db from "../models";
 import {Request, Response} from 'express';
-// import {}
+import {Post as PostI} from '../models/Post';
 
 // ALL COMMENTS
 const index = async (_: any, res: Response) => {
@@ -28,14 +28,16 @@ const show = async (req: Request, res: Response) => {
 };
 
 // CREATE COMMENT
-const create = async (req: Request, res: Response) => {
+const create = async (req: Request, res: Response): Promise<void> => {
   const postId = req.params.id;
   try {
-    const foundPost = await db.Post.findById(postId);
+    const foundPost: PostI | null = await db.Post.findById(postId);
     req.body.post = postId;
     const createdComment = await db.Comment.create(req.body);
-    foundPost.comments.push(createdComment._id);
-    foundPost.save();
+    if (foundPost) {
+      foundPost.comments.push(createdComment._id);
+      foundPost.save();
+    }
     try {
       const foundUser = await db.User.findById(createdComment.user);
       if (foundUser) {
