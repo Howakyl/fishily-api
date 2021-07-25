@@ -107,11 +107,8 @@ const destroy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             yield db.Post.findOne({ comments: deletedComment._id }, (err, foundPost) => {
                 if (err)
                     return console.log(err);
-                foundPost.comments.remove(commentId);
-                foundPost.save((err, _) => {
-                    if (err)
-                        return console.log(err);
-                });
+                foundPost.comments.remove(deletedComment._id);
+                foundPost.save();
             });
             res.json({ deletedComment: deletedComment });
         }

@@ -90,10 +90,8 @@ const destroy = async (req: Request, res: Response): Promise<void> => {
         { comments: deletedComment._id },
         (err: Error, foundPost: any) => {
           if (err) return console.log(err);
-          foundPost.comments.remove(commentId);
-          foundPost.save((err: Error, _: any) => {
-            if (err) return console.log(err);
-          });
+          foundPost.comments.remove(deletedComment._id);
+          foundPost.save();
         }
       );
       res.json({ deletedComment: deletedComment });
