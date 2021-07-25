@@ -1,6 +1,7 @@
-import { model, Schema } from "mongoose";
+import { model, Schema , Document} from "mongoose";
+// import { Post } from "./Post";
 
-export interface User  {
+export interface User extends Document {
   picture?: string;
   posts: string[];
   comments: string[];

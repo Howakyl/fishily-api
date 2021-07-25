@@ -102,10 +102,12 @@ const destroy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             if (error)
                 return console.log(error);
             foundUser.posts.remove(postId);
-            if (deletedPost.comments.length > 0) {
-                foundUser.comments.remove(deletedPost.comments);
+            if (deletedPost) {
+                if (deletedPost.comments.length > 0) {
+                    foundUser.comments.remove(deletedPost.comments);
+                }
+                foundUser.save();
             }
-            foundUser.save();
         });
         res.json({ post: deletedPost });
     }

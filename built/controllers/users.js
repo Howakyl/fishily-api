@@ -35,7 +35,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const db = __importStar(require("../models"));
 const index = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const foundUsers = yield db.User.find({}, { password: 0 });
+        const foundUsers = yield db.User.find({});
         res.json({ users: foundUsers });
     }
     catch (error) {
@@ -67,17 +67,8 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             bcryptjs_1.default.hash(req.body.password, salt, (err, hashedPassword) => __awaiter(void 0, void 0, void 0, function* () {
                 if (err)
                     return console.log(err);
-                const createdUser = {
-                    username: req.body.username,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    password: hashedPassword,
-                    bio: req.body.bio,
-                    posts: [],
-                    comments: [],
-                };
                 try {
-                    const user = yield db.User.create(createdUser);
+                    const user = yield db.User.create(Object.assign(Object.assign({}, req.body), { password: hashedPassword }));
                     res.json({ user: user });
                 }
                 catch (error) {

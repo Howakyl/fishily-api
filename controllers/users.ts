@@ -7,7 +7,7 @@ import { User as UserI } from "../models/User";
 // ALL USERS
 const index = async (_: any, res: Response): Promise<void> => {
   try {
-    const foundUsers: UserI[] = await db.User.find({}, { password: 0 });
+    const foundUsers: UserI[] = await db.User.find({});
     res.json({ users: foundUsers });
   } catch (error) {
     console.log(error);
@@ -42,18 +42,11 @@ const create = async (req: Request, res: Response): Promise<void> => {
         if (err) return console.log(err);
         bcrypt.hash(req.body.password, salt, async (err, hashedPassword) => {
           if (err) return console.log(err);
-
-          const createdUser: UserI = {
-            username: req.body.username,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            password: hashedPassword,
-            bio: req.body.bio,
-            posts: [],
-            comments: [],
-          };
           try {
-            const user = await db.User.create(createdUser);
+            const user = await db.User.create({
+              ...req.body,
+              password: hashedPassword,
+            });
             res.json({ user: user });
           } catch (error) {
             console.log("error creating user", error);
