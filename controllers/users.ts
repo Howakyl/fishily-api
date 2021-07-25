@@ -7,7 +7,7 @@ import { User as UserI } from "../models/User";
 // ALL USERS
 const index = async (_: any, res: Response): Promise<void> => {
   try {
-    const foundUsers: UserI[] = await db.User.find({});
+    const foundUsers: UserI[] = await db.User.find({}, { password: 0 });
     res.json({ users: foundUsers });
   } catch (error) {
     console.log(error);

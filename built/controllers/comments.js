@@ -60,8 +60,10 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const foundPost = yield db.Post.findById(postId);
         req.body.post = postId;
         const createdComment = yield db.Comment.create(req.body);
-        foundPost.comments.push(createdComment._id);
-        foundPost.save();
+        if (foundPost) {
+            foundPost.comments.push(createdComment._id);
+            foundPost.save();
+        }
         try {
             const foundUser = yield db.User.findById(createdComment.user);
             if (foundUser) {
@@ -93,27 +95,26 @@ const destroy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const commentId = req.params.id;
     try {
         const deletedComment = yield db.Comment.findByIdAndDelete(commentId);
-        yield db.User.findOne({ comments: commentId }, (err, foundUser) => {
-            if (err)
-                return console.log(err);
-            if (foundUser) {
-                foundUser.comments.remove(commentId);
-                foundUser.save((err, _) => {
+        if (deletedComment) {
+            yield db.User.findOne({ comments: deletedComment._id }, (err, foundUser) => {
+                if (err)
+                    return console.log(err);
+                if (foundUser) {
+                    foundUser.comments.remove(deletedComment._id);
+                    foundUser.save();
+                }
+            });
+            yield db.Post.findOne({ comments: deletedComment._id }, (err, foundPost) => {
+                if (err)
+                    return console.log(err);
+                foundPost.comments.remove(commentId);
+                foundPost.save((err, _) => {
                     if (err)
                         return console.log(err);
                 });
-            }
-        });
-        yield db.Post.findOne({ comments: commentId }, (err, foundPost) => {
-            if (err)
-                return console.log(err);
-            foundPost.comments.remove(commentId);
-            foundPost.save((err, _) => {
-                if (err)
-                    return console.log(err);
             });
-        });
-        res.json({ deletedComment: deletedComment });
+            res.json({ deletedComment: deletedComment });
+        }
     }
     catch (error) {
         console.log("error deleting comment: ", error);

@@ -35,7 +35,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const db = __importStar(require("../models"));
 const index = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const foundUsers = yield db.User.find({});
+        const foundUsers = yield db.User.find({}, { password: 0 });
         res.json({ users: foundUsers });
     }
     catch (error) {
