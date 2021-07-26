@@ -1,8 +1,21 @@
-import mongoose from "mongoose";
+import { model, Schema, Document } from "mongoose";
+import { User } from "./User";
+import { Comment } from "./Comment";
 
-const Schema = mongoose.Schema;
+export interface Post extends Document {
+  title: string;
+  description: string;
+  fish: string;
+  date: Date;
+  locationName: string;
+  lat: number;
+  lng: number;
+  image: string;
+  user: User;
+  comments: Comment[];
+}
 
-const postSchema = new Schema(
+const postSchema = new Schema<Post>(
   {
     title: {
       type: String,
@@ -38,12 +51,12 @@ const postSchema = new Schema(
         "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Fish_icon.svg/1200px-Fish_icon.svg.png",
     },
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
     comments: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Comment",
       },
     ],
@@ -51,5 +64,5 @@ const postSchema = new Schema(
   { timestamps: true }
 );
 
-const Post = mongoose.model("Post", postSchema);
+const Post = model<Post>("Post", postSchema);
 export default Post;

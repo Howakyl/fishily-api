@@ -3,7 +3,7 @@ import User from "./User";
 import Post from "./Post";
 import Comment from "./Comment";
 
-const connectionString =
+const connectionString: string | undefined =
   process.env.NODE_ENV === "production"
     ? process.env.MONGODB_URI
     : process.env.MONGODB_DEV;
@@ -15,7 +15,7 @@ const configOptions = {
 };
 
 mongoose
-  .connect(connectionString, configOptions)
+  .connect(connectionString as string, configOptions)
   .then(() => console.log("MongoDB successfully connected..."))
   .catch((err: Error) => console.log(`MongoDB connection error: ${err}`));
 
