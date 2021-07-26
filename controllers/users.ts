@@ -111,6 +111,7 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
       if (!user) {
         console.log("Login Route: No User Found");
         res.json({ Error: "no user found." });
+        return;
       }
 
       // Verify user password with login password
@@ -121,6 +122,10 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
           req.session.currentUser = user;
           console.log("successfully logged in!");
           res.send(req.session.currentUser);
+        }
+        if (!isMatch) {
+          console.log('incorrect password.');
+          res.json({error: 'incorrect password.'})
         }
       });
     }
