@@ -104,7 +104,7 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 
 // LOG IN USER
 const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
-  db.User.findOne(
+  await db.User.findOne(
     { username: req.body.username },
     (err: Error, user: UserI) => {
       if (err) return console.log(err);
@@ -122,8 +122,7 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
           req.session.currentUser = user;
           console.log("successfully logged in!");
           res.send(req.session.currentUser);
-        }
-        if (!isMatch) {
+        } else {
           console.log('incorrect password.');
           res.json({error: 'incorrect password.'})
         }

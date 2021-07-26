@@ -114,12 +114,13 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    db.User.findOne({ username: req.body.username }, (err, user) => {
+    yield db.User.findOne({ username: req.body.username }, (err, user) => {
         if (err)
             return console.log(err);
         if (!user) {
             console.log("Login Route: No User Found");
             res.json({ Error: "no user found." });
+            return;
         }
         bcryptjs_1.default.compare(req.body.password, user.password, (err, isMatch) => {
             if (err)
@@ -128,6 +129,10 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 req.session.currentUser = user;
                 console.log("successfully logged in!");
                 res.send(req.session.currentUser);
+            }
+            else {
+                console.log('incorrect password.');
+                res.json({ error: 'incorrect password.' });
             }
         });
     });
