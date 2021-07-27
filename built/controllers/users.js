@@ -118,7 +118,6 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (err)
             return console.log(err);
         if (!user) {
-            console.log("No User Found");
             res.json({ error: "no user found." });
             return;
         }
@@ -131,12 +130,10 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 res.send(req.session.currentUser);
             }
             else {
-                console.log('incorrect password.');
-                res.json({ error: 'incorrect password.' });
+                res.json({ error: "incorrect password." });
             }
         });
     });
-    console.log('res: ', res);
 });
 module.exports = {
     index,
