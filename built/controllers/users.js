@@ -119,7 +119,7 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return console.log(err);
         if (!user) {
             console.log("Login Route: No User Found");
-            res.json({ Error: "no user found." });
+            res.json({ error: "no user found." });
             return;
         }
         bcryptjs_1.default.compare(req.body.password, user.password, (err, isMatch) => {
@@ -136,6 +136,7 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
         });
     });
+    console.log('res: ', res);
 });
 module.exports = {
     index,

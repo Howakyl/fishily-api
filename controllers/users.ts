@@ -110,7 +110,7 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
       if (err) return console.log(err);
       if (!user) {
         console.log("Login Route: No User Found");
-        res.json({ Error: "no user found." });
+        res.json({ error: "no user found." });
         return;
       }
 
@@ -129,6 +129,7 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
       });
     }
   );
+  console.log('res: ', res)
 };
 
 module.exports = {
