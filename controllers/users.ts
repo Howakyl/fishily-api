@@ -109,7 +109,6 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
     (err: Error, user: UserI) => {
       if (err) return console.log(err);
       if (!user) {
-        console.log("Login Route: No User Found");
         res.json({ error: "no user found." });
         return;
       }
@@ -123,13 +122,11 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
           console.log("successfully logged in!");
           res.send(req.session.currentUser);
         } else {
-          console.log('incorrect password.');
-          res.json({error: 'incorrect password.'})
+          res.json({ error: "incorrect password." });
         }
       });
     }
   );
-  console.log('res: ', res)
 };
 
 module.exports = {

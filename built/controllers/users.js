@@ -118,7 +118,7 @@ const logIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (err)
             return console.log(err);
         if (!user) {
-            console.log("Login Route: No User Found");
+            console.log("No User Found");
             res.json({ error: "no user found." });
             return;
         }
