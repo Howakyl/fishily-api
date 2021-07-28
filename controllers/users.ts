@@ -104,13 +104,13 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 
 // LOG IN USER
 const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
-  db.User.findOne(
+  await db.User.findOne(
     { username: req.body.username },
     (err: Error, user: UserI) => {
       if (err) return console.log(err);
       if (!user) {
-        console.log("Login Route: No User Found");
-        res.json({ Error: "no user found." });
+        res.json({ error: "no user found." });
+        return;
       }
 
       // Verify user password with login password
@@ -121,6 +121,8 @@ const logIn = async (req: MyContext["req"], res: Response): Promise<void> => {
           req.session.currentUser = user;
           console.log("successfully logged in!");
           res.send(req.session.currentUser);
+        } else {
+          res.json({ error: "incorrect password." });
         }
       });
     }
