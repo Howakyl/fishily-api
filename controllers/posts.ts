@@ -1,7 +1,11 @@
-const db = require("../models/");
+import * as db from "../models";
+import { Post as PostI } from "../models/Post";
+import { User as UserI } from "../models/User";
+import { Request, Response } from "express";
 
 // ALL POSTS
-const index = async (req, res) => {
+
+const index = async (_: any, res: Response) => {
   try {
     const foundPosts = await db.Post.find({}).populate("user", {
       password: 0,
@@ -15,7 +19,7 @@ const index = async (req, res) => {
 };
 
 // SHOW POST
-const show = async (req, res) => {
+const show = async (req: Request, res: Response): Promise<void> => {
   try {
     const foundPost = await db.Post.findById(req.params.id)
       .populate("user", { password: 0, bio: 0 })
@@ -33,16 +37,18 @@ const show = async (req, res) => {
   }
 };
 
-// ADD POSTS
-const create = async (req, res) => {
+// CREATE Post
+const create = async (req: Request, res: Response) => {
   const userId = req.params.id;
   try {
     const foundUser = await db.User.findById(userId);
     req.body.user = userId;
     const createdPost = await db.Post.create(req.body);
-    foundUser.posts.push(createdPost._id);
-    await foundUser.save();
-    res.json({ post: createdPost });
+    if (foundUser) {
+      foundUser.posts.push(createdPost._id);
+      await foundUser.save();
+      res.json({ post: createdPost });
+    }
   } catch (error) {
     if (error) console.log(error);
     res.json({ Error: "No user found." });
@@ -50,7 +56,7 @@ const create = async (req, res) => {
 };
 
 //UPDATE POST
-const update = async (req, res) => {
+const update = async (req: Request, res: Response) => {
   const postId = req.params.id;
   try {
     const updatedPost = await db.Post.findByIdAndUpdate(postId, req.body, {
@@ -64,19 +70,25 @@ const update = async (req, res) => {
 };
 
 //DELETE POST, DELETES POST ON USER, COMMENTS FROM USER
-const destroy = async (req, res) => {
+
+const destroy = async (req: Request, res: Response) => {
   const postId = req.params.id;
   try {
-    const deletedPost = await db.Post.findByIdAndDelete(postId);
-    await db.Comment.deleteMany({ _id: { $in: deletedPost.comments } });
-    await db.User.findOne({ posts: postId }, (error, foundUser) => {
-      if (error) return console.log(error);
-      foundUser.posts.remove(postId);
-      if (deletedPost.comments.length > 0) {
-        foundUser.comments.remove(deletedPost.comments);
-      } 
-      foundUser.save();
-    });
+    const deletedPost: PostI | null = await db.Post.findByIdAndDelete(postId);
+    await db.Comment.deleteMany({ _id: { $in: deletedPost!.comments } });
+    await db.User.findOne(
+      { posts: deletedPost!._id },
+      (error: Error, foundUser: UserI) => {
+        if (error) return console.log(error);
+        foundUser.posts.remove(deletedPost!._id);
+        if (deletedPost) {
+          if (deletedPost.comments.length > 0) {
+            foundUser.comments.remove(deletedPost.comments);
+          }
+          foundUser.save();
+        }
+      }
+    );
     res.json({ post: deletedPost });
   } catch (error) {
     console.log("error deleting post: ", error);
@@ -85,13 +97,13 @@ const destroy = async (req, res) => {
 };
 
 // ALL POST COMMENTS
-const comments = (req, res) => {
+const comments = (req: Request, res: Response) => {
   db.Post.findById(req.params.id)
     .populate("comments")
-    .then((foundPost) => {
+    .then((foundPost: any) => {
       res.json({ comments: foundPost.comments });
     })
-    .catch((err) => {
+    .catch((err: Error) => {
       if (err) console.log(err);
       res.json({ Error: "Unable to fetch comments" });
     });

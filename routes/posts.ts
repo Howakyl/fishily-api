@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const ctrl = require("../controllers");
+import * as ctrl from "../controllers";
 
 // /api/fishily/posts
 router.get("/", ctrl.posts.index);
@@ -9,4 +9,4 @@ router.put("/:id", ctrl.posts.update);
 router.delete("/:id", ctrl.posts.destroy);
 router.get("/:id/comments", ctrl.posts.comments);
 
-module.exports = router;
+export = router;
