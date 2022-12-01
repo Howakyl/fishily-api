@@ -58,7 +58,7 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (err)
             return console.log(err);
         if (user) {
-            console.log("User Account Already Exists.");
+            console.error("User Account Already Exists.");
             return res.json({ Error: "User already exists." });
         }
         bcryptjs_1.default.genSalt(10, (err, salt) => {
